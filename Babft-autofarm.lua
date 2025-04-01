@@ -6,8 +6,7 @@ local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
 
 local positions = {
     Vector3.new(-51, 43, -165),
-    Vector3.new(-54, 16, 8668),
-    Vector3.new(-58, -292, 8725),
+    Vector3.new(-54, 43, 8724),
     Vector3.new(-56, -356, 9497)
 }
 
