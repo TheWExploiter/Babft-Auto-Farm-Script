@@ -6,11 +6,10 @@ local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
 
 local positions = {
     Vector3.new(-51, 43, -165),   -- Start (teleport here first)
-    Vector3.new(-54, 16, 8668),   -- End of All Stages (tween here)
     Vector3.new(-56, -356, 9497)  -- End Chest (teleport here)
 }
 
-local tweenSpeed = 150
+local tweenSpeed = 250
 local running = false
 
 -- Create GUI
