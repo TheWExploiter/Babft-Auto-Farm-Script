@@ -11,7 +11,7 @@ local positions = {
     Vector3.new(-56, -356, 9497)
 }
 
-local tweenSpeed = 150
+local tweenSpeed = 300
 local running = false
 
 local ScreenGui = Instance.new("ScreenGui", game.CoreGui)
@@ -26,23 +26,17 @@ StopButton.Size = UDim2.new(0, 100, 0, 50)
 StopButton.Position = UDim2.new(0, 50, 0, 110)
 StopButton.Text = "Stop"
 
-local function isSafePosition(position)
-    -- Check if the Y position is above water (adjust the height as needed)
-    return position.Y > 0  -- Change this value to better fit your game's safe height
-end
-
 local function moveToPosition(targetPosition)
     if humanoidRootPart then
-        -- Ensure the position is safe before moving
-        if isSafePosition(targetPosition) then
-            local tweenInfo = TweenInfo.new((humanoidRootPart.Position - targetPosition).Magnitude / tweenSpeed, Enum.EasingStyle.Linear)
-            local tween = TweenService:Create(humanoidRootPart, tweenInfo, {CFrame = CFrame.new(targetPosition)})
-            tween:Play()
+        -- Keep the current Y position to avoid going underwater
+        local currentY = humanoidRootPart.Position.Y
+        local targetPositionWithSameY = Vector3.new(targetPosition.X, currentY, targetPosition.Z)
+        
+        local tweenInfo = TweenInfo.new((humanoidRootPart.Position - targetPositionWithSameY).Magnitude / tweenSpeed, Enum.EasingStyle.Linear)
+        local tween = TweenService:Create(humanoidRootPart, tweenInfo, {CFrame = CFrame.new(targetPositionWithSameY)})
+        tween:Play()
 
-            tween.Completed:Wait()  -- Wait for the tween to complete
-        else
-            print("Unsafe position detected. Skipping move.")
-        end
+        tween.Completed:Wait()  -- Wait for the tween to complete
     end
 end
 
