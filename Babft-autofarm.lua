@@ -26,13 +26,23 @@ StopButton.Size = UDim2.new(0, 100, 0, 50)
 StopButton.Position = UDim2.new(0, 50, 0, 110)
 StopButton.Text = "Stop"
 
+local function isSafePosition(position)
+    -- Check if the Y position is above water (adjust the height as needed)
+    return position.Y > 0  -- Change this value to better fit your game's safe height
+end
+
 local function moveToPosition(targetPosition)
     if humanoidRootPart then
-        local tweenInfo = TweenInfo.new((humanoidRootPart.Position - targetPosition).Magnitude / tweenSpeed, Enum.EasingStyle.Linear)
-        local tween = TweenService:Create(humanoidRootPart, tweenInfo, {CFrame = CFrame.new(targetPosition)})
-        tween:Play()
+        -- Ensure the position is safe before moving
+        if isSafePosition(targetPosition) then
+            local tweenInfo = TweenInfo.new((humanoidRootPart.Position - targetPosition).Magnitude / tweenSpeed, Enum.EasingStyle.Linear)
+            local tween = TweenService:Create(humanoidRootPart, tweenInfo, {CFrame = CFrame.new(targetPosition)})
+            tween:Play()
 
-        tween.Completed:Wait() -- Wait for the tween to complete
+            tween.Completed:Wait()  -- Wait for the tween to complete
+        else
+            print("Unsafe position detected. Skipping move.")
+        end
     end
 end
 
