@@ -1,3 +1,4 @@
+local TweenService = game:GetService("TweenService")
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer
 local character = player.Character or player.CharacterAdded:Wait()
@@ -10,6 +11,7 @@ local positions = {
     Vector3.new(-56, -356, 9497)
 }
 
+local tweenSpeed = 150
 local running = false
 
 local ScreenGui = Instance.new("ScreenGui", game.CoreGui)
@@ -24,10 +26,13 @@ StopButton.Size = UDim2.new(0, 100, 0, 50)
 StopButton.Position = UDim2.new(0, 50, 0, 110)
 StopButton.Text = "Stop"
 
--- Teleport Movement Function
-local function teleportToPosition(targetPosition)
+local function moveToPosition(targetPosition)
     if humanoidRootPart then
-        humanoidRootPart.CFrame = CFrame.new(targetPosition)
+        local tweenInfo = TweenInfo.new((humanoidRootPart.Position - targetPosition).Magnitude / tweenSpeed, Enum.EasingStyle.Linear)
+        local tween = TweenService:Create(humanoidRootPart, tweenInfo, {CFrame = CFrame.new(targetPosition)})
+        tween:Play()
+
+        tween.Completed:Wait() -- Wait for the tween to complete
     end
 end
 
@@ -36,11 +41,12 @@ local function startFarming()
     while running do
         character = player.Character or player.CharacterAdded:Wait()
         humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+        
         for _, pos in ipairs(positions) do
-            teleportToPosition(pos)
-            wait(2) -- Wait before continuing to next position
+            moveToPosition(pos)
+            wait(0.2) -- Wait 0.2 seconds at each position before moving to the next
         end
-        wait(2) -- Wait before restarting
+        wait(2) -- Wait 2 seconds before restarting the loop
     end
 end
 
